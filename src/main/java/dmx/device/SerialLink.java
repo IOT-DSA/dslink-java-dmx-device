@@ -1,9 +1,6 @@
-package serial;
+package dmx.device;
 
-import java.nio.charset.Charset;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.dsa.iot.dslink.node.Node;
@@ -25,12 +22,6 @@ import com.serotonin.io.serial.SerialUtils;
 public class SerialLink {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(SerialLink.class);
-	
-	static List<String> charsets = new ArrayList<String>(Charset.availableCharsets().keySet());
-	static String defaultCharset = Charset.defaultCharset().name();
-	static {
-		charsets.add("None");
-	}
 	
 	private Node node;
 	Set<SerialConn> conns = new HashSet<SerialConn>();
@@ -63,9 +54,6 @@ public class SerialLink {
 				checkAttribute(child, "Data Bits", new Value(8));
 				checkAttribute(child, "Stop Bits", new Value(1));
 				checkAttribute(child, "Parity", new Value(0));
-				checkAttribute(child, "Start Code", new Value("0x05"));
-				checkAttribute(child, "End Code", new Value("0x0D"));
-				checkAttribute(child, "Charset", new Value(defaultCharset));
 				
 				SerialConn sc = new SerialConn(this, child);
 				sc.restoreLastSession();
@@ -130,14 +118,11 @@ public class SerialLink {
 			act.addParameter(new Parameter("Serial Port", ValueType.STRING));
 		}
 		
-		act.addParameter(new Parameter("Baud Rate", ValueType.NUMBER, new Value(9600)));
+		act.addParameter(new Parameter("Baud Rate", ValueType.NUMBER, new Value(57600)));
 		act.addParameter(new Parameter("Data Bits", ValueType.NUMBER, new Value(8)));
 		act.addParameter(new Parameter("Stop Bits", ValueType.NUMBER, new Value(1)));
 		act.addParameter(new Parameter("Parity", ValueType.NUMBER, new Value(0)));
-		act.addParameter(new Parameter("Start Code", ValueType.STRING, new Value("0x05")));
-		act.addParameter(new Parameter("End Code", ValueType.STRING, new Value("0x0D")));
-		act.addParameter(new Parameter("Charset", ValueType.makeEnum(charsets), new Value(defaultCharset)));
-		
+
 		Node anode = node.getChild("add connection");
 		if (anode == null) node.createChild("add connection").setAction(act).build().setSerializable(false);
 		else anode.setAction(act);
@@ -159,19 +144,13 @@ public class SerialLink {
 		int dbits = event.getParameter("Data Bits", ValueType.NUMBER).getNumber().intValue();
 		int sbits = event.getParameter("Stop Bits", ValueType.NUMBER).getNumber().intValue();
 		int parity = event.getParameter("Parity", ValueType.NUMBER).getNumber().intValue();
-		String start = event.getParameter("Start Code", ValueType.STRING).getString();
-		String end = event.getParameter("End Code", ValueType.STRING).getString();
-		String charset = event.getParameter("Charset").getString();
 		
-		Node cnode = node.createChild(name).setValueType(ValueType.STRING).build();
+		Node cnode = node.createChild(name).build();
 		cnode.setAttribute("Serial Port", new Value(com));
 		cnode.setAttribute("Baud Rate", new Value(baud));
 		cnode.setAttribute("Data Bits", new Value(dbits));
 		cnode.setAttribute("Stop Bits", new Value(sbits));
 		cnode.setAttribute("Parity", new Value(parity));
-		cnode.setAttribute("Start Code", new Value(start));
-		cnode.setAttribute("End Code", new Value(end));
-		cnode.setAttribute("Charset", new Value(charset));
 		
 		SerialConn sc = new SerialConn(this, cnode);
 		sc.init();

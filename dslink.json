@@ -1,24 +1,24 @@
 {
-  "name": "dslink-java-serial",
-  "version": "0.0.3",
-  "description": "A DSLink for generic serial communication",
+  "name": "dslink-java-dmx-device",
+  "version": "0.0.1",
+  "description": "A DSLink that acts as a DMX-512 device and can be controlled by a DMX master",
   "license": "Apache",
-  "main": "bin/dslink-java-serial",
+  "main": "bin/dslink-java-dmx-device",
   "author": {
     "name": "Daniel Shapiro",
     "email": "danielsspam1272@gmail.com"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/IOT-DSA/dslink-java-serial"
+    "url": "https://github.com/IOT-DSA/dslink-java-dmx-device"
   },
   "bugs": {
-    "url": "https://github.com/IOT-DSA/dslink-java-serial/issues"
+    "url": "https://github.com/IOT-DSA/dslink-java-dmx-device/issues"
   },
   "configs": {
   	"name": {
       "type": "string",
-      "default": "Serial"
+      "default": "DMX-device"
     },
     "broker": {
       "type": "url"
@@ -40,7 +40,7 @@
     },
     "handler_class": {
       "type": "string",
-      "default": "serial.Main"
+      "default": "dmx.device.Main"
     }
   }
 }

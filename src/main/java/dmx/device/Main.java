@@ -1,4 +1,4 @@
-package serial;
+package dmx.device;
 
 import org.dsa.iot.dslink.DSLink;
 import org.dsa.iot.dslink.DSLinkFactory;
