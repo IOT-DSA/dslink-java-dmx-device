@@ -58,7 +58,16 @@ public class SerialConn {
 	}
 	
 	void restoreLastSession() {
-		node.clearChildren();
+		if (node.getChildren() != null) {
+			for (Node child: node.getChildren().values()) {
+				if (child.getAttribute("Base Address") != null) {
+					DmxDevice dev = new DmxDevice(this, child);
+					dev.restoreLastSession();
+				} else {
+					node.removeChild(child);
+				}
+			}
+		}
 		init();
 	}
 	

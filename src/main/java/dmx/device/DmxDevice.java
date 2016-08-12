@@ -38,6 +38,30 @@ public class DmxDevice {
 		makeAddRgbComponentAction();
 		makeAddMultistateComponentAction();
 	}
+	
+	void restoreLastSession() {
+		if (node.getChildren() != null) {
+			for (Node child: node.getChildren().values()) {
+				if (child.getAttribute("Channel Offset") != null) {
+					if (child.getAttribute("Value Mappings") != null) {
+						MultistateComponent mc = new MultistateComponent(this, child);
+						mc.restoreLastSession();
+					} else {
+						LinearComponent lc = new LinearComponent(this, child);
+						lc.restoreLastSession();
+					}
+				} else if (child.getAttribute("Red Channel Offset") != null &&
+						child.getAttribute("Green Channel Offset") != null &&
+						child.getAttribute("Blue Channel Offset") != null) {
+					RgbComponent rc = new RgbComponent(this, child);
+					rc.restoreLastSession();
+				} else {
+					node.removeChild(child);
+				}
+			}
+		}
+		init();
+	}
 
 	void update() {
 		for (DmxComponent component: components) {

@@ -23,6 +23,11 @@ public abstract class DmxComponent {
 		update();
 	}
 	
+	void restoreLastSession() {
+		makeEditAction();
+		makeRemoveAction();
+	}
+	
 	protected abstract void update();
 	
 	protected abstract void makeEditAction();
